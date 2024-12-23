@@ -11,7 +11,6 @@ class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _DashboardScreenState createState() => _DashboardScreenState();
 }
 
@@ -44,12 +43,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
       final rendaController = Provider.of<RendaController>(context, listen: false);
 
       if (financialData != null) {
-        // Garantir que os valores sejam double, tratando casos de nulos ou tipos incorretos
         final totalDespesas = financialData['totalDespesas'] ?? 0.0;
         final totalEconomias = financialData['totalEconomias'] ?? 0.0;
         final totalRendas = financialData['totalRendas'] ?? 0.0;
 
-        // Atualizar os controladores com os dados tratados
         despesaController.setTotalDespesas(totalDespesas);
         economiaController.setTotalEconomias(totalEconomias);
         rendaController.setTotalRendas(totalRendas);
@@ -77,31 +74,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dashboard'),
-        actions: [
-          IconButton(
-            onPressed: () => _signOut(context),
-            icon: const Icon(Icons.logout),
-            tooltip: 'Sair',
+        title: const Text('Dashboard',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
           ),
-        ],
+        ),
         backgroundColor: Colors.teal,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('Resumo de Finanças', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.teal)),
-              const SizedBox(height: 20),
-              _buildSummaryCard('Total de Rendas', rendaController.totalRendas, Colors.blueAccent, '/tela_renda'),
-              _buildSummaryCard('Total de Despesas', despesaController.totalDespesa, Colors.redAccent, '/tela_despesa'),
-              _buildSummaryCard('Total de Economias', economiaController.totalEconomias, Colors.greenAccent, '/carteiras'),
-              _buildSummaryCard('Saldo', saldo, saldo >= 0 ? Colors.green : Colors.red, null),
-              const SizedBox(height: 30),
-              _buildNavigationButtons(context),
-            ],
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.teal, Colors.tealAccent],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Resumo de Finanças', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+                const SizedBox(height: 20),
+                _buildSummaryCard('Total de Rendas', rendaController.totalRendas, Colors.blueAccent, '/tela_renda'),
+                _buildSummaryCard('Total de Despesas', despesaController.totalDespesa, Colors.redAccent, '/tela_despesa'),
+                _buildSummaryCard('Total de Economias', economiaController.totalEconomias, Colors.green, '/carteiras'),
+                _buildSummaryCard('Saldo', saldo, saldo >= 0 ? Colors.green : Colors.red, null),
+                const SizedBox(height: 30),
+                _buildNavigationButtons(context),
+              ],
+            ),
           ),
         ),
       ),
@@ -114,6 +120,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return GestureDetector(
       onTap: route != null ? () => Navigator.pushNamed(context, route) : null,
       child: Card(
+        color: Colors.white.withOpacity(0.9),
         margin: const EdgeInsets.symmetric(vertical: 10),
         elevation: 5,
         shape: RoundedRectangleBorder(

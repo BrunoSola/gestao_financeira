@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:gestao_financeira/controllers/despesa_controller.dart';
+import 'package:gestao_financeira/views/cadastro_despesa_screen.dart';
 
 class TelaDespesas extends StatelessWidget {
   const TelaDespesas({super.key});
@@ -14,60 +15,76 @@ class TelaDespesas extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Despesas'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/cadastro_despesa');
-            },
-            icon: const Icon(Icons.add),
-            tooltip: 'Nova Despesa',
+        title: const Text('Despesas',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
           ),
-        ],
+        ),
+        backgroundColor: Colors.teal,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: despesaController.despesas.isEmpty
-            ? const Center(
-                child: Text(
-                  'Nenhuma despesa cadastrada.',
-                  style: TextStyle(fontSize: 18),
-                ),
-              )
-            : ListView.builder(
-                itemCount: despesaController.despesas.length,
-                itemBuilder: (context, index) {
-                  final despesa = despesaController.despesas[index];
-                  return Card(
-                    margin: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: ListTile(
-                      title: Text(despesa['descricao']),
-                      subtitle: Text('Valor: R\$ ${despesa['valor'].toStringAsFixed(2)}'),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.edit, color: Colors.blue),
-                            onPressed: () {
-                              Navigator.pushNamed(
-                                context,
-                                '/cadastro_despesa',
-                                arguments: despesa,
-                              );
-                            },
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () {
-                              despesaController.removerDespesa(index);
-                            },
-                          ),
-                        ],
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.teal, Colors.tealAccent],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: despesaController.despesas.isEmpty
+              ? const Center(
+                  child: Text(
+                    'Nenhuma despesa cadastrada.',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: despesaController.despesas.length,
+                  itemBuilder: (context, index) {
+                    final despesa = despesaController.despesas[index];
+                    return Card(
+                      margin: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: ListTile(
+                        title: Text(despesa['descricao']),
+                        subtitle: Text('Valor: R\$ ${despesa['valor'].toStringAsFixed(2)}'),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit, color: Colors.blue),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const TelaDespesas(),
+                                  ),
+                                ).then((_) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return const CadastroDespesaScreen();
+                                    },
+                                  );
+                                });
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () {
+                                despesaController.removerDespesa(index);
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
+                    );
+                  },
+                ),
+        ),
       ),
     );
   }

@@ -15,64 +15,67 @@ class CarteirasScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Carteiras de Economia'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CadastroCarteiraScreen(),
-                ),
-              );
-            },
-            icon: const Icon(Icons.add),
-            tooltip: 'Nova Carteira',
+        title: const Text('Carteiras de Economia',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
           ),
-        ],
+        ),
+        backgroundColor: Colors.teal,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: economiaController.carteiras.isEmpty
-            ? const Center(
-                child: Text(
-                  'Nenhuma carteira cadastrada.',
-                  style: TextStyle(fontSize: 18),
-                ),
-              )
-            : ListView.builder(
-                itemCount: economiaController.carteiras.length,
-                itemBuilder: (context, index) {
-                  final carteira = economiaController.carteiras[index];
-                  return Card(
-                    margin: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: ListTile(
-                      title: Text(carteira['nome']),
-                      subtitle: Text('Valor: R\$ ${carteira['valor'].toStringAsFixed(2)}'),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CadastroEconomiaScreen(carteira: carteira),
-                          ),
-                        );
-                      },
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () {
-                          if (carteira['valor'] == 0.0) {
-                            _confirmDelete(context, economiaController, index);
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('A carteira deve ter valor 0 para ser excluída.')),
-                            );
-                          }
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.teal, Colors.tealAccent],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: economiaController.carteiras.isEmpty
+              ? const Center(
+                  child: Text(
+                    'Nenhuma carteira cadastrada.',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: economiaController.carteiras.length,
+                  itemBuilder: (context, index) {
+                    final carteira = economiaController.carteiras[index];
+                    return Card(
+                      margin: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: ListTile(
+                        title: Text(carteira['nome']),
+                        subtitle: Text('Valor: R\$ ${carteira['valor'].toStringAsFixed(2)}'),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CadastroEconomiaScreen(carteira: carteira),
+                            ),
+                          );
                         },
+                        trailing: IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () {
+                            if (carteira['valor'] == 0.0) {
+                              _confirmDelete(context, economiaController, index);
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('A carteira deve ter valor 0 para ser excluída.')),
+                              );
+                            }
+                          },
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
+                    );
+                  },
+                ),
+        ),
       ),
     );
   }

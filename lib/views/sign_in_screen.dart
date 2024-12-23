@@ -2,24 +2,52 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignInScreen extends StatefulWidget {
+  const SignInScreen({super.key});
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _SignInScreenState createState() => _SignInScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignInScreenState extends State<SignInScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  Future<User?> _signInWithGoogle(BuildContext context) async {
+  Future<void> _signUp() async {
+    final email = _emailController.text;
+    final password = _passwordController.text;
+
+    try {
+      final signInMethods = await _auth.fetchSignInMethodsForEmail(email);
+
+      if (signInMethods.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('E-mail já cadastrado.')),
+        );
+      } else {
+        final userCredential = await _auth.createUserWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Usuário criado com sucesso: ${userCredential.user!.uid}')),
+        );
+        Navigator.pushReplacementNamed(context, '/dashboard');
+      }
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao criar usuário: ${e.message}')),
+      );
+    }
+  }
+
+  Future<void> _signUpWithGoogle(BuildContext context) async {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
-        return null;
+        return;
       }
 
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
@@ -29,40 +57,13 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       final UserCredential userCredential = await _auth.signInWithCredential(credential);
-      return userCredential.user;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Usuário criado com sucesso: ${userCredential.user!.uid}')),
+      );
+      Navigator.pushReplacementNamed(context, '/dashboard');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao fazer login com Google: $e')),
-      );
-      return null;
-    }
-  }
-
-  Future<void> _signInWithEmailAndPassword(BuildContext context) async {
-    final email = _emailController.text;
-    final password = _passwordController.text;
-
-    try {
-      final signInMethods = await _auth.fetchSignInMethodsForEmail(email);
-
-      if (signInMethods.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('E-mail não cadastrado.')),
-        );
-        return;
-      }
-
-      final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      final User? user = userCredential.user;
-      if (user != null) {
-        Navigator.pushReplacementNamed(context, '/dashboard');
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao fazer login: $e')),
+        SnackBar(content: Text('Erro ao fazer sign up com Google: $e')),
       );
     }
   }
@@ -142,43 +143,27 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () => _signInWithEmailAndPassword(context),
+                    onPressed: _signUp,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.orange,
                       foregroundColor: Colors.white, // Cor do texto em branco
                       padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                       textStyle: const TextStyle(fontSize: 18),
                     ),
-                    child: const Text('Login'),
+                    child: const Text('Sign Up'),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton.icon(
                     onPressed: () async {
-                      final user = await _signInWithGoogle(context);
-                      if (user != null) {
-                        Navigator.pushReplacementNamed(context, '/dashboard');
-                      }
+                      await _signUpWithGoogle(context);
                     },
                     icon: const Icon(Icons.login, size: 24),
-                    label: const Text('Login com Google'),
+                    label: const Text('Sign Up com Google'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white, // Cor do texto em branco
                       padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                       textStyle: const TextStyle(fontSize: 18),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, '/sign_in');
-                    },
-                    child: const Text(
-                      'Ainda não é cadastrado?',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        decoration: TextDecoration.underline,
-                      ),
                     ),
                   ),
                 ],

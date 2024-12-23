@@ -14,12 +14,17 @@ import 'package:gestao_financeira/views/authCheck.dart';
 import 'package:gestao_financeira/views/cadastro_economia_screen.dart';
 import 'package:gestao_financeira/views/cadastro_despesa_screen.dart';
 import 'package:gestao_financeira/views/carteiras_screen.dart'; // Importando CarteirasScreen
+import 'package:gestao_financeira/views/login_screen.dart';
+import 'package:gestao_financeira/views/sign_in_screen.dart';
+import 'package:gestao_financeira/views/sobre_screen.dart';
+import 'package:gestao_financeira/views/help_screen.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  // Certifique-se de habilitar o provedor de login no Firebase Console
   runApp(const MyApp());
 }
 
@@ -54,6 +59,10 @@ class MyApp extends StatelessWidget {
           '/tela_renda': (context) => const TelaRenda(),
           '/tela_despesa': (context) => const TelaDespesas(),
           '/carteiras': (context) => const CarteirasScreen(), // Adicionar a rota para CarteirasScreen
+          '/login': (context) => const LoginScreen(),
+          '/sign_in': (context) => const SignInScreen(),
+          '/sobre': (context) => const SobreScreen(),
+          '/help': (context) => const HelpScreen(),
         },
       ),
     );

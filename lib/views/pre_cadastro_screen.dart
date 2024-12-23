@@ -53,68 +53,85 @@ class _PreCadastroScreenState extends State<PreCadastroScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pré-Cadastro'),
+        title: const Text('Pré-Cadastro',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Colors.teal,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Informe sua Renda Mensal (opcional)',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: _rendaController,
-                decoration: const InputDecoration(
-                  labelText: 'Renda Mensal',
-                  prefixText: 'R\$ ',
-                  border: OutlineInputBorder(),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.teal, Colors.tealAccent],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Informe sua Renda Mensal (opcional)',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () => _adicionarRenda(context),
-                child: const Text('Adicionar Renda'),
-              ),
-              const SizedBox(height: 24),
-              const Text(
-                'Deseja duplicar suas rendas todo mês?',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  ChoiceChip(
-                    label: const Text('Sim'),
-                    selected: _duplicarRenda,
-                    onSelected: (bool selected) {
-                      setState(() {
-                        _duplicarRenda = selected;
-                      });
-                    },
+                const SizedBox(height: 8),
+                TextField(
+                  controller: _rendaController,
+                  decoration: const InputDecoration(
+                    labelText: 'Renda Mensal',
+                    prefixText: 'R\$ ',
+                    border: OutlineInputBorder(),
                   ),
-                  const SizedBox(width: 10),
-                  ChoiceChip(
-                    label: const Text('Não'),
-                    selected: !_duplicarRenda,
-                    onSelected: (bool selected) {
-                      setState(() {
-                        _duplicarRenda = !selected;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () => _concluirPreCadastro(context),
-                child: const Text('Concluir Pré-Cadastro'),
-              ),
-            ],
+                  keyboardType: TextInputType.number,
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => _adicionarRenda(context),
+                  child: const Text('Adicionar Renda'),
+                ),
+                const SizedBox(height: 24),
+                const Text(
+                  'Deseja duplicar suas rendas todo mês?',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    ChoiceChip(
+                      label: const Text('Sim'),
+                      selected: _duplicarRenda,
+                      onSelected: (bool selected) {
+                        setState(() {
+                          _duplicarRenda = selected;
+                        });
+                      },
+                    ),
+                    const SizedBox(width: 10),
+                    ChoiceChip(
+                      label: const Text('Não'),
+                      selected: !_duplicarRenda,
+                      onSelected: (bool selected) {
+                        setState(() {
+                          _duplicarRenda = !selected;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: () => _concluirPreCadastro(context),
+                  child: const Text('Concluir Pré-Cadastro'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

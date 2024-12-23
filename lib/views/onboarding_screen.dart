@@ -37,6 +37,49 @@ class OnboardingScreen extends StatelessWidget {
     }
   }
 
+  Future<void> _signIn(BuildContext context) async {
+    try {
+      final user = await authService.signInWithGoogle();
+
+      if (user != null) {
+        await _setUserStatus(true, user.uid);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const DashboardScreen()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Erro ao realizar sign in')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao realizar sign in: $e')),
+      );
+    }
+  }
+
+  void _handleMenuSelection(BuildContext context, String value) {
+    switch (value) {
+      case 'Inicio':
+        Navigator.pushReplacementNamed(context, '/');
+        break;
+      case 'Sobre':
+        Navigator.pushNamed(context, '/sobre');
+        break;
+      case 'Help':
+        Navigator.pushNamed(context, '/help');
+        break;
+      case 'Login':
+        Navigator.pushNamed(context, '/login');
+        break;
+      case 'Sign In':
+        Navigator.pushNamed(context, '/sign_in');
+        break;
+      // Adicionar lógica para outras opções do menu, se necessário
+    }
+  }
+
   Future<void> _precacheImage(BuildContext context) async {
     await precacheImage(const AssetImage('assets/images/background.jpg'), context);
   }
@@ -49,12 +92,21 @@ class OnboardingScreen extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Gestão Financeira'),
+              title: const Text(
+                'Gestão Financeira',
+                style: TextStyle(
+                  fontFamily: 'Roboto', // Fonte mais bonita
+                  fontSize: 24, // Aumentar o tamanho da fonte
+                  fontWeight: FontWeight.bold,
+                  color: Colors.tealAccent, // Cor que combina com o background verde
+                ),
+                textAlign: TextAlign.center, // Centralizar o texto
+              ),
+              backgroundColor: Colors.teal,
+              centerTitle: true, // Centralizar o título
               actions: [
                 PopupMenuButton<String>(
-                  onSelected: (String value) {
-                    // Implementar lógica para cada opção do menu
-                  },
+                  onSelected: (value) => _handleMenuSelection(context, value),
                   itemBuilder: (BuildContext context) {
                     return [
                       const PopupMenuItem<String>(
@@ -109,10 +161,19 @@ class OnboardingScreen extends StatelessWidget {
                         child: const Text(
                           'Gestão Financeira',
                           style: TextStyle(
-                            fontSize: 32,
+                            fontFamily: 'Roboto', // Fonte mais bonita
+                            fontSize: 32, // Aumentar o tamanho da fonte
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: Colors.tealAccent, // Cor que combina com o verde
+                            shadows: [
+                              Shadow(
+                                blurRadius: 10.0,
+                                color: Colors.black45,
+                                offset: Offset(2.0, 2.0),
+                              ),
+                            ],
                           ),
+                          textAlign: TextAlign.center, // Centralizar o texto
                         ),
                       ),
                       Container(
@@ -134,20 +195,18 @@ class OnboardingScreen extends StatelessWidget {
                       const SizedBox(height: 40),
                       // Botões de Login e Sign In
                       ElevatedButton.icon(
-                        onPressed: () => _signInWithGoogle(context),
+                        onPressed: () => Navigator.pushNamed(context, '/login'),
                         icon: const Icon(Icons.login, size: 24),
-                        label: const Text('Login com Google'),
+                        label: const Text('Login'),
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white, backgroundColor: Colors.red, // Cor do texto e ícone
+                          foregroundColor: Colors.white, backgroundColor: Colors.orange, // Cor do texto e ícone
                           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                           textStyle: const TextStyle(fontSize: 18),
                         ),
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton.icon(
-                        onPressed: () {
-                          // Implementar lógica de Sign In
-                        },
+                        onPressed: () => Navigator.pushNamed(context, '/sign_in'),
                         icon: const Icon(Icons.person_add, size: 24),
                         label: const Text('Sign In'),
                         style: ElevatedButton.styleFrom(
