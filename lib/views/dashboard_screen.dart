@@ -4,8 +4,10 @@ import 'package:gestao_financeira/controllers/economia_controller.dart';
 import 'package:gestao_financeira/controllers/renda_controller.dart';
 import 'package:gestao_financeira/services/auth_service.dart';
 import 'package:gestao_financeira/services/firebase_service.dart';
+import 'package:gestao_financeira/utils/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -74,20 +76,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dashboard',
+        title: const Text(
+          'Gestão Financeira',
           style: TextStyle(
-            fontSize: 24,
+            fontFamily: 'Roboto', // Fonte mais bonita
+            fontSize: 24, // Aumentar o tamanho da fonte
             fontWeight: FontWeight.bold,
+            color: appBarBackgroundColor, // Cor que combina com o background verde
           ),
+          textAlign: TextAlign.center, // Centralizar o texto
         ),
-        backgroundColor: Colors.teal,
+        backgroundColor: Colors.blue,
+        centerTitle: true, // Centralizar o título
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout, color: Colors.white),
+            onPressed: () async {
+              await AuthService().signOut();
+              Navigator.of(context).pushReplacementNamed('/');
+            },
+          ),
+        ],
       ),
       body: Container(
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.teal, Colors.tealAccent],
+            colors: [Colors.blue, Colors.blueAccent],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -100,7 +116,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               children: [
                 const Text('Resumo de Finanças', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
                 const SizedBox(height: 20),
-                _buildSummaryCard('Total de Rendas', rendaController.totalRendas, Colors.blueAccent, '/tela_renda'),
+                _buildSummaryCard('Total de Rendas', rendaController.totalRendas, Colors.green, '/tela_renda'),
                 _buildSummaryCard('Total de Despesas', despesaController.totalDespesa, Colors.redAccent, '/tela_despesa'),
                 _buildSummaryCard('Total de Economias', economiaController.totalEconomias, Colors.green, '/carteiras'),
                 _buildSummaryCard('Saldo', saldo, saldo >= 0 ? Colors.green : Colors.red, null),
@@ -148,11 +164,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Navigator.pushNamed(context, '/cadastro_renda');
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blueAccent,
+            backgroundColor: Colors.green,
             minimumSize: const Size(60, 60),
             shape: const CircleBorder(),
           ),
-          child: const Icon(Icons.add, color: Colors.white),
+          child: const Icon(FontAwesomeIcons.plus, color: Colors.white),
         ),
         ElevatedButton(
           onPressed: () {
@@ -163,18 +179,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
             minimumSize: const Size(60, 60),
             shape: const CircleBorder(),
           ),
-          child: const Icon(Icons.add, color: Colors.white),
+          child: const Icon(FontAwesomeIcons.minus, color: Colors.white),
         ),
         ElevatedButton(
           onPressed: () {
             Navigator.pushNamed(context, '/cadastro_carteiras');
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.greenAccent,
+            backgroundColor: const Color.fromARGB(255, 211, 197, 0),
             minimumSize: const Size(60, 60),
             shape: const CircleBorder(),
           ),
-          child: const Icon(Icons.account_balance_wallet, color: Colors.white),
+          child: Image.asset(
+            'assets/images/cofrinho.png',  // Caminho para a sua imagem
+            width: 35,                      // Largura desejada
+            height: 35,                     // Altura desejada
+          ),
         ),
       ],
     );

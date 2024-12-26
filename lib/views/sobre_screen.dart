@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gestao_financeira/utils/constants.dart';
 
 class SobreScreen extends StatelessWidget {
   const SobreScreen({super.key});
@@ -7,20 +8,31 @@ class SobreScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sobre',
+        title: const Text(
+          'Sobre o App',
           style: TextStyle(
-            fontSize: 24,
+            fontFamily: 'Roboto', // Fonte mais bonita
+            fontSize: 24, // Aumentar o tamanho da fonte
             fontWeight: FontWeight.bold,
+            color: Colors.white, // Cor que combina com o background verde
           ),
+          textAlign: TextAlign.center, // Centralizar o texto
         ),
-        backgroundColor: Colors.teal,
+        backgroundColor: appBarBackgroundColor,
+        centerTitle: true,  // Centralizar o título
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white), // Ícone do botão de voltar
+          onPressed: () {
+            Navigator.pop(context); // Voltar para a tela anterior
+          },
+        ),
       ),
       body: Container(
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.teal, Colors.tealAccent],
+            colors: [Colors.blue, Colors.blueAccent],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),

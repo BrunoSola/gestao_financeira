@@ -82,13 +82,19 @@ class _CadastroEconomiaScreenState extends State<CadastroEconomiaScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Carteira: ${widget.carteira['nome']}'),
-        backgroundColor: Colors.teal,
+        title: Text('Carteira: ${widget.carteira['nome']}',
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.white, // Cor do texto do AppBar
+          ),
+        ),
+        backgroundColor: Colors.blue,
       ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.teal, Colors.tealAccent],
+            colors: [Colors.blue, Colors.blueAccent],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -103,6 +109,7 @@ class _CadastroEconomiaScreenState extends State<CadastroEconomiaScreen> {
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     'Valor Atual: R\$ ${widget.carteira['valor'].toStringAsFixed(2)}',
@@ -111,9 +118,30 @@ class _CadastroEconomiaScreenState extends State<CadastroEconomiaScreen> {
                   const SizedBox(height: 20),
                   TextField(
                     controller: _valorController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Valor',
                       prefixText: 'R\$ ',
+                      labelStyle: const TextStyle(
+                        color: Colors.blue, // Cor do texto do rótulo
+                        fontWeight: FontWeight.bold,
+                      ),
+                      filled: true,
+                      fillColor: const Color(0xFFF5F5F5), // Cor de fundo do campo
+                      contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(
+                          color: Colors.blue,
+                          width: 1.5,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(
+                          color: Colors.blue,
+                          width: 2.0,
+                        ),
+                      ),
                     ),
                     keyboardType: TextInputType.number,
                   ),
@@ -123,10 +151,22 @@ class _CadastroEconomiaScreenState extends State<CadastroEconomiaScreen> {
                     children: [
                       ElevatedButton(
                         onPressed: () => _guardarValor(context),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                          textStyle: const TextStyle(fontSize: 18),
+                        ),
                         child: const Text('Guardar'),
                       ),
                       ElevatedButton(
                         onPressed: () => _recuperarValor(context),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                          textStyle: const TextStyle(fontSize: 18),
+                        ),
                         child: const Text('Recuperar'),
                       ),
                     ],

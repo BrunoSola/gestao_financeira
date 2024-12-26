@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gestao_financeira/views/onboarding_screen.dart';
 import 'package:gestao_financeira/views/dashboard_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:gestao_financeira/services/auth_service.dart';
 
 class AuthCheck extends StatefulWidget {
   const AuthCheck({super.key});
@@ -23,10 +25,12 @@ class _AuthCheckState extends State<AuthCheck> {
 
   Future<void> _checkAppState() async {
     final prefs = await SharedPreferences.getInstance();
+    final authService = Provider.of<AuthService>(context, listen: false);
+    final user = authService.getCurrentUser();
 
     setState(() {
       _hasSeenOnboarding = prefs.getBool('hasSeenOnboarding') ?? false;
-      _isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+      _isLoggedIn = user != null;
       _isLoading = false;
     });
   }
@@ -42,9 +46,10 @@ class _AuthCheckState extends State<AuthCheck> {
     if (_isLoggedIn) {
       return const DashboardScreen();
     } else if (_hasSeenOnboarding) {
-      return OnboardingScreen();
+      return OnboardingScreen(); // Caso o usuário já tenha visto o onboarding
     } else {
-      return OnboardingScreen();
+      return OnboardingScreen(); // Caso o usuário não tenha visto o onboarding
     }
   }
 }
+

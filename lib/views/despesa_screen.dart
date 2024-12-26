@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gestao_financeira/utils/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:gestao_financeira/controllers/despesa_controller.dart';
 import 'package:gestao_financeira/views/cadastro_despesa_screen.dart';
@@ -21,14 +22,14 @@ class TelaDespesas extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.teal,
+        backgroundColor: appBarBackgroundColor,
       ),
       body: Container(
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.teal, Colors.tealAccent],
+            colors: [Colors.blue, Colors.blueAccent],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),

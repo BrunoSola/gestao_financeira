@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirebaseService {
 
+  // Método para salvar dados financeiros do usuário no Firestore
   Future<void> saveFinancialData({
       String? userId,
       double? totalRendas,
@@ -10,6 +11,11 @@ class FirebaseService {
     }) async {
       try {
         DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+        if (!snapshot.exists) {
+          print("Usuário não encontrado no Firestore.");
+          return;
+        }
+
         Map<String, dynamic> existingData = snapshot.data() as Map<String, dynamic>? ?? {};
 
         Map<String, double?> dataToUpdate = {
@@ -40,6 +46,7 @@ class FirebaseService {
           'totalRendas': snapshot['totalRendas'] ?? 0.0,
         };
       } else {
+        print("Usuário não encontrado.");
         return null;
       }
     } catch (e) {
